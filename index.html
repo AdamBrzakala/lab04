@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <title>Lab03</title>
+    <title>Lab04</title>
 
     <script>
         function drawStar(area) {
@@ -70,8 +70,8 @@
             <div id="drawable"></div>
         </div>
         <div class="generation_container">
-            <button id="button_rect" type="button" class="generate_btn">Generuj gwiazdę</button>
-            <button id="button_circle" type="button" class="generate_btn">Generuj sierp księżyca</button>
+            <button id="button_star" type="button" class="generate_btn">Generuj gwiazdę</button>
+            <button id="button_moon" type="button" class="generate_btn">Generuj sierp księżyca</button>
         </div>
     </div>
     <script>
@@ -85,8 +85,8 @@
         var layer = new Konva.Layer();
         stage.add(layer);
 
-        document.getElementById('button_rect').addEventListener('click', () => drawStar(layer));
-        document.getElementById('button_circle').addEventListener('click', () => drawMoon(layer));
+        document.getElementById('button_star').addEventListener('click', () => drawStar(layer));
+        document.getElementById('button_moon').addEventListener('click', () => drawMoon(layer));
 
         layer.on('dragmove', function (e) {
             var target = e.target;
