@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Lab03</title>
+
+    <script>
+        function drawStar(area) {
+            area.add(
+                new Konva.Star({
+                    x: Math.random() * 100,
+                    y: Math.random() * 100,
+                    numPoints: 6,
+                    innerRadius: 30,
+                    outerRadius: 60,
+                    fill: Konva.Util.getRandomColor(),
+                    stroke: 'black',
+                    strokeWidth: 4,
+                    draggable: true,
+                })
+            );
+            area.draw();
+        }
+
+        function drawMoon(area) {
+            area.add(
+                new Konva.Shape({
+                    x: 20,
+                    y: 20,
+                    fill: Konva.Util.getRandomColor(),
+                    width: 70,
+                    height: 70,
+                    draggable: true,
+                    sceneFunc: function (context, shape) {
+                        context.beginPath();
+                        context.arc(20, 20, 0.8*shape.getAttr('width'), 0, 360, false);
+                        context.closePath();
+                        context.fillStrokeShape(shape);
+
+                        context.beginPath();
+                        context.arc(50, 20, 0.8*shape.getAttr('width')/1.3, 0, 360, false);
+                        context.closePath();
+
+                        context.fillStyle = "white";
+                        context.fill()
+                    }
+                })
+
+            );
+            area.draw();
+        }
+
+        function isIntersecting(rectangle, other) {
+            return (
+                other.x < rectangle.x + rectangle.width &&
+                rectangle.x < other.x + other.width &&
+                other.y < rectangle.y + rectangle.height &&
+                rectangle.y < other.y + other.height
+            );
+        }
+    </script>
+</head>
+
+<body>
+    <div class="drawable">
+        <div class="platform">
+            <div id="drawable"></div>
+        </div>
+        <div class="generation_container">
+            <button id="button_rect" type="button" class="generate_btn">Generuj gwiazdę</button>
+            <button id="button_circle" type="button" class="generate_btn">Generuj sierp księżyca</button>
+        </div>
+    </div>
+    <script>
+        var stage = new Konva.Stage({
+            container: 'drawable',
+            width: window.innerWidth * 1,
+            height: window.innerHeight * 0.9,
+            margin: 0,
+        });
+
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        document.getElementById('button_rect').addEventListener('click', () => drawStar(layer));
+        document.getElementById('button_circle').addEventListener('click', () => drawMoon(layer));
+
+        layer.on('dragmove', function (e) {
+            var target = e.target;
+            var targetRect = e.target.getClientRect();
+
+            layer.children.forEach(function (group) {
+                var group_rect = group.getClientRect();
+                if (group === target) {
+                    return;
+                }
+                if (isIntersecting(group_rect, targetRect)) {
+                    target.x(group_rect.x + group_rect.width + targetRect.width / 2);
+                    target.y(group_rect.y + group_rect.height + targetRect.height / 2);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
